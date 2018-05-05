@@ -3,6 +3,9 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import './assets/css/dashboard.css'
+import './assets/css/tabler.css'
+import './assets/css/c3.css'
 
 Vue.config.productionTip = false
 
