@@ -5,13 +5,9 @@
         <div class="container-fluid">
           <page-header title='Clarizen Users' subtitle='Clarizen Users at GAI'></page-header>
           <div class="row row-cards">
-            <div class="col-lg-8 col-md-6">
-              <div class="row">
-                <div class="col-lg-6">
-                  <card-big-progress title="Number of Users" hilight="106" :progress=100 color="bg-red"></card-big-progress>
-                </div>
-              </div>
-            </div>
+            <card-big-progress title="Number of Users" hilight="106" :progress=100 color="bg-blue"></card-big-progress>
+            <card-small-progress title="Not Logged in a Month" hilight="28" :progress=28 color="bg-red"></card-small-progress>
+            <card-small-progress title="Logged in today" hilight="21" :progress=21 color="bg-green"></card-small-progress>
           </div>
           <bar-chart></bar-chart>
         </div>
@@ -23,6 +19,7 @@
 <script>
 import PageHeader from './PageHeader.vue'
 import CardBigProgress from './cards/CardBigProgress.vue'
+import CardSmallProgress from './cards/CardSmallProgress.vue'
 import BarChart from './charts/BarChart.vue'
 
 export default {
@@ -35,6 +32,7 @@ export default {
   components: {
     PageHeader,
     CardBigProgress,
+    CardSmallProgress,
     BarChart
   }
 }
