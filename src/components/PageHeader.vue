@@ -1,10 +1,12 @@
 <template>
   <div class="page-header">
-    <h1 class="page-title">
-      {{ title }}
-    </h1>
-    <div class="page-subtitle">
-      {{ subtitle }}
+    <div>
+      <h1 class="page-title">
+        {{ title }}
+      </h1>
+      <div class="page-description">
+        {{ subtitle }}
+      </div>
     </div>
   </div>
 </template>
