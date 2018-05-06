@@ -42,7 +42,7 @@ export default {
           ['data1', 2, 4, 1, 5, 2, 1],
           ['data2', 7, 2, 4, 6, 10, 1]
         ],
-        type: 'spline'
+        type: 'bar'
       }
     }
     this.handler.$emit('init', options)
