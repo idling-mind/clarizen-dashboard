@@ -4,7 +4,7 @@
       <div class="h5">{{ title }}</div>
       <div class="display-4 font-weight-bold mb-4">{{ hilight }}</div>
       <div class="progress progress-sm">
-          <div class="progress-bar bg-blue" :style="getProgress()"></div>
+          <div :class="color" class="progress-bar" :style="getProgress()"></div>
       </div>
     </div>
   </div>
@@ -16,7 +16,8 @@ export default {
   props: {
     hilight: String,
     title: String,
-    progress: Number
+    progress: Number,
+    color: String
   },
   methods: {
     getProgress () {

@@ -8,11 +8,12 @@
             <div class="col-lg-8 col-md-6">
               <div class="row">
                 <div class="col-lg-6">
-                  <card-big-progress title="Number of Users" hilight="106" :progress=100></card-big-progress>
+                  <card-big-progress title="Number of Users" hilight="106" :progress=100 color="bg-red"></card-big-progress>
                 </div>
               </div>
             </div>
           </div>
+          <bar-chart></bar-chart>
         </div>
       </div>
     </div>
@@ -22,6 +23,7 @@
 <script>
 import PageHeader from './PageHeader.vue'
 import CardBigProgress from './cards/CardBigProgress.vue'
+import BarChart from './charts/BarChart.vue'
 
 export default {
   name: 'Users',
@@ -32,7 +34,8 @@ export default {
   },
   components: {
     PageHeader,
-    CardBigProgress
+    CardBigProgress,
+    BarChart
   }
 }
 </script>
