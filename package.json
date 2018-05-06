@@ -14,8 +14,8 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "c3": "^0.5.4",
     "vue": "^2.5.2",
-    "vue-c3": "^1.1.1",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {

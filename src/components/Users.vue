@@ -9,7 +9,6 @@
             <card-small-progress title="Not Logged in a Month" hilight="28" :progress=28 color="bg-red"></card-small-progress>
             <card-small-progress title="Logged in today" hilight="21" :progress=21 color="bg-green"></card-small-progress>
           </div>
-          <bar-chart></bar-chart>
         </div>
       </div>
     </div>
@@ -20,7 +19,6 @@
 import PageHeader from './PageHeader.vue'
 import CardBigProgress from './cards/CardBigProgress.vue'
 import CardSmallProgress from './cards/CardSmallProgress.vue'
-import BarChart from './charts/BarChart.vue'
 
 export default {
   name: 'Users',
@@ -32,8 +30,7 @@ export default {
   components: {
     PageHeader,
     CardBigProgress,
-    CardSmallProgress,
-    BarChart
+    CardSmallProgress
   }
 }
 </script>
