@@ -12,6 +12,10 @@
 <script>
 export default {
   name: 'PageHeader',
+  props: {
+    title: String,
+    subtitle: String
+  },
   data () {
     return {
       title: 'Page Title',
