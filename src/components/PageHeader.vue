@@ -17,12 +17,6 @@ export default {
   props: {
     title: String,
     subtitle: String
-  },
-  data () {
-    return {
-      title: 'Page Title',
-      subtitle: 'Page Subtitle'
-    }
   }
 }
 </script>
