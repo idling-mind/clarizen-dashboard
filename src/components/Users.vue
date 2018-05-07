@@ -52,7 +52,11 @@ export default {
     }
   },
   mounted () {
-    this.getUsers()
+    var vm = this
+    vm.getUsers()
+    setInterval(function () {
+      vm.getUsers()
+    }, 300000)
   },
   computed: {
     noOfUsers: function () {
