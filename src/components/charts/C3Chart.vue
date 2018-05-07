@@ -1,5 +1,5 @@
 <template>
-  <div id="c3chart">
+  <div class="c3" id="c3chart">
 
   </div>
 </template>
@@ -13,6 +13,14 @@ export default {
     chartdata: {
       type: Object,
       required: true
+    },
+    chartaxis: {
+      type: Object,
+      required: false
+    },
+    chartsize: {
+      type: Object,
+      required: false
     }
   },
   data () {
@@ -26,7 +34,9 @@ export default {
     console.log(this.chartdata)
     this.chart = c3.generate({
       bindto: vm.$el,
-      data: vm.chartdata
+      data: vm.chartdata,
+      axis: vm.chartaxis,
+      size: vm.chartsize
     })
   },
   watch: {

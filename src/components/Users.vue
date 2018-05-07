@@ -9,6 +9,9 @@
             <card-small-progress title="Not logged ever" :hilight="noOfNonLoggers.count" :progress="noOfNonLoggers.percent" color="bg-red"></card-small-progress>
             <card-small-progress title="Not Logged in a Month" :hilight="noOfMonthLoggers.count" :progress="noOfMonthLoggers.count" color="bg-red"></card-small-progress>
             <card-small-progress title="Logged in Today" :hilight="noOfTodayLoggers.count" :progress="noOfTodayLoggers.count" color="bg-green"></card-small-progress>
+            <single-h-bar></single-h-bar>
+          </div>
+          <div class="row row-cards">
           </div>
         </div>
       </div>
@@ -22,6 +25,7 @@ import clapi from '../clarizen/clapi.js'
 import PageHeader from './PageHeader.vue'
 import CardBigProgress from './cards/CardBigProgress.vue'
 import CardSmallProgress from './cards/CardSmallProgress.vue'
+import SingleHBar from './charts/SingleHBar.vue'
 
 export default {
   name: 'Users',
@@ -33,7 +37,8 @@ export default {
   components: {
     PageHeader,
     CardBigProgress,
-    CardSmallProgress
+    CardSmallProgress,
+    SingleHBar
   },
   methods: {
     getUsers () {
