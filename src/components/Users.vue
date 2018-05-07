@@ -3,13 +3,13 @@
     <div class="page-main">
       <div class="my-3 my-md-5">
         <div class="container-fluid">
-          <page-header title='Clarizen Users' subtitle='Clarizen Users at GAI'></page-header>
+          <page-header title='Clarizen Users'></page-header>
           <div class="row row-cards">
             <card-small-progress title="Number of Users" :hilight="noOfUsers" :progress=100 color="bg-blue"></card-small-progress>
             <card-small-progress title="Not logged ever" :hilight="noOfNonLoggers.count" :progress="noOfNonLoggers.percent" color="bg-red"></card-small-progress>
             <card-small-progress title="Not Logged in a Month" :hilight="noOfMonthLoggers.count" :progress="noOfMonthLoggers.count" color="bg-red"></card-small-progress>
             <card-small-progress title="Logged in Today" :hilight="noOfTodayLoggers.count" :progress="noOfTodayLoggers.count" color="bg-green"></card-small-progress>
-            <single-h-bar :datajson="groupLicenseType"></single-h-bar>
+            <single-h-bar title="License Type" :datajson="groupLicenseType"></single-h-bar>
           </div>
           <div class="row row-cards">
           </div>

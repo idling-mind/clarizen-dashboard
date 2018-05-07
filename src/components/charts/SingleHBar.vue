@@ -3,31 +3,35 @@
     <div class="card">
       <div class="card-body text-center">
         <div class="h5">{{ title }}</div>
-        <c3-chart :chartdata="c3chartdata" :chartaxis="c3chartaxis" :chartsize="c3chartsize"></c3-chart>
+        <div class="c3"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import C3Chart from './C3Chart.vue'
+import c3 from 'c3'
+
 export default {
   name: 'SingleHBar',
   props: {
+    title: {
+      type: String,
+      required: true
+    },
     datajson: {
       type: Object,
       required: false,
       default () {
         return {
-          Full: 20,
-          TeamMember: 130
+          data1: 20,
+          data2: 80
         }
       }
     }
   },
   data () {
     return {
-      title: 'HBar',
       c3chartdata: {
         json: this.datajson,
         type: 'bar',
@@ -52,9 +56,6 @@ export default {
       }
     }
   },
-  components: {
-    C3Chart
-  },
   methods: {
     chartkeys () {
       var keys = []
@@ -64,6 +65,21 @@ export default {
         }
       }
       return keys
+    }
+  },
+  mounted () {
+    var vm = this
+    console.log(this.chartdata)
+    this.chart = c3.generate({
+      bindto: vm.$el.querySelector('.c3'),
+      data: vm.c3chartdata,
+      axis: vm.c3chartaxis,
+      size: vm.c3chartsize
+    })
+  },
+  watch: {
+    chartdata: function (val) {
+      this.chart.load(val)
     }
   }
 }
