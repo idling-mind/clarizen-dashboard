@@ -69,7 +69,6 @@ export default {
   },
   mounted () {
     var vm = this
-    console.log(this.chartdata)
     this.chart = c3.generate({
       bindto: vm.$el.querySelector('.c3'),
       data: vm.c3chartdata,
