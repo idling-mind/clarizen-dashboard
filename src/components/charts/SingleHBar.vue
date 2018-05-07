@@ -30,32 +30,6 @@ export default {
       }
     }
   },
-  data () {
-    return {
-      c3chartdata: {
-        json: this.datajson,
-        type: 'bar',
-        groups: [
-          this.chartkeys()
-        ],
-        legend: {
-          position: 'right'
-        }
-      },
-      c3chartaxis: {
-        rotated: true,
-        x: {
-          show: false
-        },
-        y: {
-          show: false
-        }
-      },
-      c3chartsize: {
-        height: 76
-      }
-    }
-  },
   methods: {
     chartkeys () {
       var keys = []
@@ -68,17 +42,45 @@ export default {
     }
   },
   mounted () {
+    console.log('Mounted C3 chart')
     var vm = this
+    console.log(this.c3chartdata)
     this.chart = c3.generate({
       bindto: vm.$el.querySelector('.c3'),
-      data: vm.c3chartdata,
-      axis: vm.c3chartaxis,
-      size: vm.c3chartsize
+      data: {
+        json: this.datajson,
+        type: 'bar',
+        groups: [
+          this.chartkeys()
+        ],
+        legend: {
+          position: 'right'
+        },
+        labels: true
+      },
+      axis: {
+        rotated: true,
+        x: {
+          show: false
+        },
+        y: {
+          show: false
+        }
+      },
+      size: {
+        height: 76
+      }
     })
   },
   watch: {
-    chartdata: function (val) {
-      this.chart.load(val)
+    datajson: function (val) {
+      console.log(this.c3chartdata)
+      this.chart.load({
+        json: val
+      })
+      this.chart.groups([
+        this.chartkeys()
+      ])
     }
   }
 }
