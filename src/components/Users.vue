@@ -9,7 +9,7 @@
             <card-small-progress title="Not logged ever" :hilight="noOfNonLoggers.count" :progress="noOfNonLoggers.percent" color="bg-red"></card-small-progress>
             <card-small-progress title="Not Logged in a Month" :hilight="noOfMonthLoggers.count" :progress="noOfMonthLoggers.count" color="bg-red"></card-small-progress>
             <card-small-progress title="Logged in Today" :hilight="noOfTodayLoggers.count" :progress="noOfTodayLoggers.count" color="bg-green"></card-small-progress>
-            <single-h-bar></single-h-bar>
+            <single-h-bar :datajson="groupLicenseType"></single-h-bar>
           </div>
           <div class="row row-cards">
           </div>
@@ -106,6 +106,11 @@ export default {
         count: x.true,
         percent: x.true / this.noOfUsers
       }
+    },
+    groupLicenseType: function () {
+      var x = _.countBy(this.users, 'LicenseType.Name')
+      console.log(x)
+      return x
     },
     groupLastLogin: function () {
       var now = Date.now()

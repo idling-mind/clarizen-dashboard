@@ -32,7 +32,7 @@ export default {
         json: this.datajson,
         type: 'bar',
         groups: [
-          ['Full', 'TeamMember']
+          this.chartkeys()
         ],
         legend: {
           position: 'right'
@@ -55,9 +55,16 @@ export default {
   components: {
     C3Chart
   },
-  mounted () {
-    console.log(this.datajson)
-    console.log(this.datajson.keys)
+  methods: {
+    chartkeys () {
+      var keys = []
+      for (var i in this.datajson) {
+        if (this.datajson.hasOwnProperty(i)) {
+          keys.push(i)
+        }
+      }
+      return keys
+    }
   }
 }
 </script>
