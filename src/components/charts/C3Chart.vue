@@ -10,10 +10,6 @@ import c3 from 'c3'
 export default {
   name: 'C3Chart',
   props: {
-    charttype: {
-      type: String,
-      default: 'bar'
-    },
     chartdata: {
       type: Object,
       required: true
