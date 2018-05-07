@@ -4,7 +4,7 @@
       <h1 class="page-title">
         {{ title }}
       </h1>
-      <div class="page-description">
+      <div v-if="this.subtitle" class="page-description">
         {{ subtitle }}
       </div>
     </div>
