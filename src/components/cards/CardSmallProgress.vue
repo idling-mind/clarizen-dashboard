@@ -16,7 +16,7 @@
 export default {
   name: 'CardSmallProgress',
   props: {
-    hilight: String,
+    hilight: Number,
     title: String,
     progress: Number,
     color: String
