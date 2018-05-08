@@ -7,8 +7,8 @@
           <div class="row row-cards">
             <card-small-progress title="Number of Users" :hilight="noOfUsers" :progress=100 color="bg-blue"></card-small-progress>
             <card-small-progress title="Never logged in" :hilight="noOfNonLoggers.count" :progress="noOfNonLoggers.percent" color="bg-red"></card-small-progress>
-            <card-small-progress title="Not Logged in a Month" :hilight="noOfMonthLoggers.count" :progress="noOfMonthLoggers.count" color="bg-red"></card-small-progress>
-            <card-small-progress title="Logged in Today" :hilight="noOfTodayLoggers.count" :progress="noOfTodayLoggers.count" color="bg-green"></card-small-progress>
+            <card-small-progress title="Not Logged in a Month" :hilight="noOfMonthLoggers.count" :progress="noOfMonthLoggers.percent" color="bg-orange"></card-small-progress>
+            <card-small-progress title="Logged in Today" :hilight="noOfTodayLoggers.count" :progress="noOfTodayLoggers.percent" color="bg-green"></card-small-progress>
             <single-h-bar title="License Type" :datajson="groupLicenseType"></single-h-bar>
           </div>
           <div class="row row-cards">
@@ -42,7 +42,6 @@ export default {
   },
   methods: {
     getUsers () {
-      console.log('Initiated getUsers')
       clapi.post('data/relationQuery', '{"entityId":"/DiscussionGroup/1jipe5uebj67scpwpqnk7vgn5502","relationName":"GroupMembers","fields":["FirstName", "Lastname", "Username", "Lastlogin", "LicenseType.Name", "State.Name"],"where":"State IN (\'Active\',\'Draft\')","paging":{"from":0, "limit": 500}}'
       ).then(response => {
         this.users = response.data.entities
@@ -68,7 +67,7 @@ export default {
       })
       return {
         count: x.true,
-        percent: x.true / this.noOfUsers
+        percent: x.true / this.noOfUsers * 100
       }
     },
     noOfMonthLoggers: function () {
@@ -79,18 +78,18 @@ export default {
       })
       return {
         count: x.true,
-        percent: x.true / this.noOfUsers
+        percent: x.true / this.noOfUsers * 100
       }
     },
     noOfTodayLoggers: function () {
-      var now = Date.now()
+      var today = new Date()
       var x = _.countBy(this.users, function (item) {
-        var daydiff = (now - Date.parse(item.Lastlogin)) / (1000 * 60 * 60 * 24)
-        return daydiff < 1
+        var logindate = new Date(item.Lastlogin)
+        return today.setHours(0, 0, 0, 0) === logindate.setHours(0, 0, 0, 0)
       })
       return {
         count: x.true,
-        percent: x.true / this.noOfUsers
+        percent: x.true / this.noOfUsers * 100
       }
     },
     noOfPMs: function () {
@@ -99,7 +98,7 @@ export default {
       })
       return {
         count: x.true,
-        percent: x.true / this.noOfUsers
+        percent: x.true / this.noOfUsers * 100
       }
     },
     noOfTMs: function () {
@@ -108,12 +107,11 @@ export default {
       })
       return {
         count: x.true,
-        percent: x.true / this.noOfUsers
+        percent: x.true / this.noOfUsers * 100
       }
     },
     groupLicenseType: function () {
       var x = _.countBy(this.users, 'LicenseType.Name')
-      console.log(x)
       return x
     },
     groupLastLogin: function () {
@@ -122,7 +120,6 @@ export default {
         var daydiff = (now - Date.parse(item.Lastlogin)) / (1000 * 60 * 60 * 24)
         return Math.floor(daydiff)
       })
-      console.log(x)
       return x
     }
   }
