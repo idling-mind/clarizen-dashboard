@@ -42,9 +42,7 @@ export default {
     }
   },
   mounted () {
-    console.log('Mounted C3 chart')
     var vm = this
-    console.log(this.c3chartdata)
     this.chart = c3.generate({
       bindto: vm.$el.querySelector('.c3'),
       data: {
@@ -74,7 +72,6 @@ export default {
   },
   watch: {
     datajson: function (val) {
-      console.log(this.c3chartdata)
       this.chart.load({
         json: val
       })
