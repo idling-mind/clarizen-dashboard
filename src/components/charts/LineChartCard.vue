@@ -24,6 +24,10 @@ export default {
       type: String,
       required: true
     },
+    xlabel: {
+      type: String,
+      required: false
+    },
     smallnumber: {
       type: String,
       required: false
@@ -67,7 +71,8 @@ export default {
       },
       axis: {
         x: {
-          show: true
+          show: true,
+          label: this.xlabel
         },
         y: {
           show: false

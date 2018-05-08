@@ -12,7 +12,7 @@
             <single-h-bar title="License Type" :datajson="groupLicenseType"></single-h-bar>
           </div>
           <div class="row row-cards">
-            <line-chart-card :datajson="groupLastLogin" title="Days since last login" :smallnumber="noOfTodayLoggers"></line-chart-card>
+            <line-chart-card :datajson="groupLastLogin" title="Users logged in today" xlabel="Days since last login" :smallnumber="noOfTodayLoggers.count"></line-chart-card>
           </div>
         </div>
       </div>
