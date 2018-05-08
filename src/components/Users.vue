@@ -12,6 +12,7 @@
             <single-h-bar title="License Type" :datajson="groupLicenseType"></single-h-bar>
           </div>
           <div class="row row-cards">
+            <line-chart-card :datajson="groupLastLogin" title="Days since last login" smallnumber="{{ noOfTodayLoggers }} logged in today"></line-chart-card>
           </div>
         </div>
       </div>
@@ -26,6 +27,7 @@ import PageHeader from './PageHeader.vue'
 import CardBigProgress from './cards/CardBigProgress.vue'
 import CardSmallProgress from './cards/CardSmallProgress.vue'
 import SingleHBar from './charts/SingleHBar.vue'
+import LineChartCard from './charts/LineChartCard.vue'
 
 export default {
   name: 'Users',
@@ -38,7 +40,8 @@ export default {
     PageHeader,
     CardBigProgress,
     CardSmallProgress,
-    SingleHBar
+    SingleHBar,
+    LineChartCard
   },
   methods: {
     getUsers () {
@@ -120,7 +123,12 @@ export default {
         var daydiff = (now - Date.parse(item.Lastlogin)) / (1000 * 60 * 60 * 24)
         return Math.floor(daydiff)
       })
-      return x
+      delete x.NaN
+      console.log(_.values(x))
+      return {
+        day: _.keys(x),
+        count: _.values(x)
+      }
     }
   }
 }
