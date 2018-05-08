@@ -11,6 +11,7 @@
 
 <script>
 import c3 from 'c3'
+import tabler from '../../assets/js/Colors.js'
 
 export default {
   name: 'SingleHBar',
@@ -55,6 +56,9 @@ export default {
           position: 'right'
         },
         labels: true
+      },
+      color: {
+        pattern: tabler.primary
       },
       axis: {
         rotated: true,
