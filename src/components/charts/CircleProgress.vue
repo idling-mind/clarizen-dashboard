@@ -5,12 +5,12 @@
     </div>
     <div class="card-body text-center">
       <div class="c3">
-        <radial-progress-bar :diameter="300"
+        <radial-progress-bar :diameter=diameter
                               :completed-steps=Math.floor(number)
                               :total-steps=100
                               :startColor="statuscolor()"
                               :stopColor="statuscolor()"
-                              :strokeWidth=25
+                              :strokeWidth=strokewidth
                               innerStrokeColor="#dddddd">
           <div class="h1">{{ Math.floor(number) }}%</div>
         </radial-progress-bar>
@@ -28,7 +28,17 @@ export default {
   props: {
     title: String,
     number: Number,
-    status: String
+    status: String,
+    diameter: {
+      type: Number,
+      required: false,
+      default: 300
+    },
+    strokewidth: {
+      type: Number,
+      required: false,
+      default: 25
+    }
   },
   methods: {
     statuscolor () {
