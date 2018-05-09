@@ -5,7 +5,10 @@
         <div class="container-fluid">
           <page-header title='GAI Strategy Matrix'></page-header>
           <div class="row row-cards">
-            <circle-progress title="Overall Progress" :number=strategyMatrix.PercentCompleted :status="strategyMatrix.TrackStatus.Name"></circle-progress>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <circle-progress title="Overall Progress" :number=strategyMatrix.PercentCompleted :status="strategyMatrix.TrackStatus.Name"></circle-progress>
+            </div>
+            div.col-lg-9
           </div>
         </div>
       </div>
@@ -38,6 +41,9 @@ export default {
       }).catch(error => {
         console.log(error)
       })
+    },
+    getQ2Prio () {
+      clapi.get()
     }
   },
   mounted () {
