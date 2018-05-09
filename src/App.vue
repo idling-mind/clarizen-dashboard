@@ -12,6 +12,6 @@ export default {
 
 <style>
 body {
-  overflow: hidden
+  overflow-y: auto
 }
 </style>
