@@ -51,6 +51,11 @@
               </div>
             </div>
           </div>
+          <div class="row row-cards">
+            <div class="col-lg-12">
+              <projects-carousel></projects-carousel>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -62,6 +67,7 @@ import _ from 'lodash'
 import RadialProgressBar from 'vue-radial-progress'
 import PageHeader from './PageHeader.vue'
 import CircleProgress from './charts/CircleProgress.vue'
+import ProjectsCarousel from './ProjectsCarousel.vue'
 import clapi from '../clarizen/clapi.js'
 import tabler from '../assets/js/Colors.js'
 
@@ -70,7 +76,8 @@ export default {
   components: {
     CircleProgress,
     PageHeader,
-    RadialProgressBar
+    RadialProgressBar,
+    ProjectsCarousel
   },
   data () {
     return {
@@ -107,38 +114,10 @@ export default {
       } else if (status === 'Off Track') {
         return tabler.colors.red
       }
-    },
-    getProject (projectID) {
-      var vm = this
-      clapi.get('data/query?q=SELECT%20@Name,%20TrackStatus.Name,%20ProjectManager.Name,%20PercentCompleted%20FROM%20Project%20WHERE%20Project%20=%20"' + projectID + '"'
-      ).then(response => {
-        var project = response.data.entities[0]
-        return vm.getSubProjects(project)
-      }).catch(error => {
-        console.log(error)
-      })
-    },
-    getSubProjects (project) {
-      var vm = this
-      clapi.get('data/query?q=SELECT%20@Name,%20TrackStatus.Name,%20ProjectManager.Name,%20PercentCompleted%20FROM%20Project%20WHERE%20ParentProject%20=%20"' + project.id + '"'
-      ).then(response => {
-        project['subprojects'] = response.data.entities
-        if (_.isEmpty(project.subprojects)) {
-          return project
-        } else {
-          project.subprojects.forEach(function (subproject) {
-            subproject = vm.getSubProjects(subproject)
-          })
-          return project
-        }
-      }).catch(error => {
-        console.log(error)
-      })
     }
   },
   mounted () {
     var vm = this
-    console.log(vm.getProject('/Project/4y2kbmxpcbobq7sdukv9wcco2901'))
     vm.getStrategyProject()
     vm.getQ2Prio()
     setInterval(function () {
