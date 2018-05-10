@@ -1,48 +1,97 @@
 <template>
-  <div class="card">
-    <div class="card-header">
-      <h3 class="card-title">{{ title }}</h3>
-    </div>
-    <div class="card-body text-center">
-      <carousel :scrollPerPage="false" :autoplay="true">
-        <slide>
-          <div class="col-6">
-          Slide 1 Content
+  <div v-if="dataisloaded">
+    <carousel :scrollPerPage="false" :autoplay="true" :perPage=3 autoplayTimeout=8000 :loop="true">
+      <slide v-for="project in projects" :key="project.id">
+        <div class="col-md-12 col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-9">
+                  <h3>{{ project.Name }}</h3>
+                  <div class="text-muted-small">
+                    {{ project.ProjectManager.Name }}
+                  </div>
+                </div>
+                <div class="col-3">
+                  <radial-progress-bar :diameter=100
+                                :completed-steps=Math.floor(project.PercentCompleted)
+                                :total-steps=100
+                                :startColor="statuscolor(project.TrackStatus.Name)"
+                                :stopColor="statuscolor(project.TrackStatus.Name)"
+                                :strokeWidth=10
+                                innerStrokeColor="#dddddd"
+                                class="d-flex mr-5">
+                    <div style="font-size:1.5em">{{ Math.floor(project.PercentCompleted) }}</div>
+                  </radial-progress-bar>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="h4">Team Members</div>
+                  <p>
+                    <span v-for="member in project.Resources.entities" :key="member.id">
+                      {{ member.Name }},
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-        </slide>
-        <slide>
-          <div class="col-6">
-          Slide 1 Content
-          </div>
-        </slide>
-        <slide>
-          <div class="col-6">
-          Slide 1 Content
-          </div>
-        </slide>
-        <slide>
-          <div class="col-6">
-          Slide 1 Content
-          </div>
-        </slide>
-        <slide>
-          <div class="col-6">
-          Slide 1 Content
-          </div>
-        </slide>
-      </carousel>
-    </div>
+        </div>
+      </slide>
+    </carousel>
   </div>
 </template>
 
 <script>
 import { Carousel, Slide } from 'vue-carousel'
+import RadialProgressBar from 'vue-radial-progress'
+import clapi from '../clarizen/clapi.js'
+import tabler from '../assets/js/Colors.js'
 
 export default {
   name: 'ProjectsCarousel',
   components: {
     Carousel,
-    Slide
+    Slide,
+    RadialProgressBar
+  },
+  props: {
+    title: {
+      type: String,
+      default: 'Project Carousel'
+    }
+  },
+  data () {
+    return {
+      projects: [],
+      dataisloaded: false
+    }
+  },
+  methods: {
+    getStrategyProject () {
+      var vm = this
+      clapi.get('data/query?q=SELECT%20@Name,%20PercentCompleted,%20TrackStatus.Name,%20ProjectManager.Name,%20%20%28SELECT%20Name%20FROM%20Resources%29%20FROM%20Project%20WHERE%20ParentProject%20=%20%22/Project/5r4db1jbd0biqmx59gobn5o6s681%22'
+      ).then(response => {
+        vm.projects = response.data.entities
+        vm.dataisloaded = true
+        console.log(vm.dataisloaded)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    statuscolor (status) {
+      if (status === 'On Track') {
+        return tabler.colors.green
+      } else if (status === 'At Risk') {
+        return tabler.colors.orange
+      } else if (status === 'Off Track') {
+        return tabler.colors.red
+      }
+    }
+  },
+  mounted () {
+    this.getStrategyProject()
   }
 }
 </script>
