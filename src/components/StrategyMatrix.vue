@@ -79,7 +79,7 @@ export default {
     }
   },
   methods: {
-    getProject () {
+    getStrategyProject () {
       clapi.get('data/query?q=SELECT%20@Name,%20PercentCompleted,%20TrackStatus.Name%20FROM%20Project%20WHERE%20Project%20=%20%22/Project/5r4db1jbd0biqmx59gobn5o6s681%22'
       ).then(response => {
         this.strategyMatrix = response.data.entities[0]
@@ -107,11 +107,44 @@ export default {
       } else if (status === 'Off Track') {
         return tabler.colors.red
       }
+    },
+    getProject (projectID) {
+      var vm = this
+      clapi.get('data/query?q=SELECT%20@Name,%20TrackStatus.Name,%20ProjectManager.Name,%20PercentCompleted%20FROM%20Project%20WHERE%20Project%20=%20"' + projectID + '"'
+      ).then(response => {
+        var project = response.data.entities[0]
+        return vm.getSubProjects(project)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    getSubProjects (project) {
+      var vm = this
+      clapi.get('data/query?q=SELECT%20@Name,%20TrackStatus.Name,%20ProjectManager.Name,%20PercentCompleted%20FROM%20Project%20WHERE%20ParentProject%20=%20"' + project.id + '"'
+      ).then(response => {
+        project['subprojects'] = response.data.entities
+        if (_.isEmpty(project.subprojects)) {
+          return project
+        } else {
+          project.subprojects.forEach(function (subproject) {
+            subproject = vm.getSubProjects(subproject)
+          })
+          return project
+        }
+      }).catch(error => {
+        console.log(error)
+      })
     }
   },
   mounted () {
-    this.getProject()
-    this.getQ2Prio()
+    var vm = this
+    console.log(vm.getProject('/Project/4y2kbmxpcbobq7sdukv9wcco2901'))
+    vm.getStrategyProject()
+    vm.getQ2Prio()
+    setInterval(function () {
+      vm.getStrategyProject()
+      vm.getQ2Prio()
+    }, 300000)
     console.log('Executed query')
   }
 }
