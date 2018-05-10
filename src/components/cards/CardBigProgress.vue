@@ -16,7 +16,10 @@
 export default {
   name: 'CardBigProgress',
   props: {
-    hilight: Number,
+    hilight: {
+      type: Number,
+      default: 0
+    },
     title: String,
     progress: Number,
     color: String
