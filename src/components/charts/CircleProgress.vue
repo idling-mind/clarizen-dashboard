@@ -31,11 +31,14 @@ export default {
       type: Number,
       default: 0
     },
-    status: String,
+    status: {
+      type: String,
+      default: 'On Track'
+    },
     diameter: {
       type: Number,
       required: false,
-      default: 300
+      default: 305
     },
     strokewidth: {
       type: Number,
