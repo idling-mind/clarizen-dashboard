@@ -27,7 +27,10 @@ export default {
   name: 'RadialProgress',
   props: {
     title: String,
-    number: Number,
+    number: {
+      type: Number,
+      default: 0
+    },
     status: String,
     diameter: {
       type: Number,
