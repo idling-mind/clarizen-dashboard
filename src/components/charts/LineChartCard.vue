@@ -15,6 +15,7 @@
 
 <script>
 import c3 from 'c3'
+import _ from 'lodash'
 import tabler from '../../assets/js/Colors.js'
 
 export default {
@@ -38,12 +39,7 @@ export default {
     },
     datajson: {
       type: Object,
-      required: true,
-      default () {
-        return {
-          data1: [10, 12, 15, 20, 12, 5, 30, 20]
-        }
-      }
+      required: true
     }
   },
   mounted () {
@@ -53,7 +49,7 @@ export default {
       data: {
         json: this.datajson,
         x: 'day',
-        type: 'area'
+        type: 'bar'
       },
       legend: {
         show: false
@@ -72,7 +68,11 @@ export default {
       axis: {
         x: {
           show: true,
-          label: this.xlabel
+          min: 0,
+          max: 24,
+          tick: {
+            values: _.range(25)
+          }
         },
         y: {
           show: false

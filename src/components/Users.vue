@@ -11,8 +11,8 @@
             <card-small-progress title="Logged in Today" :hilight="noOfTodayLoggers.count" :progress="noOfTodayLoggers.percent" color="bg-green"></card-small-progress>
             <single-h-bar title="License Type" :datajson="groupLicenseType"></single-h-bar>
           </div>
-          <div class="row row-cards">
-            <line-chart-card :datajson="groupLastLogin" title="Users logged in today" xlabel="Days since last login" :smallnumber="noOfTodayLoggers.count"></line-chart-card>
+          <div v-if="dataloaded" class="row row-cards">
+            <line-chart-card :datajson="groupLastLogin" title="Users logged in today" smallnumber="User Login Times"></line-chart-card>
           </div>
         </div>
       </div>
@@ -33,7 +33,8 @@ export default {
   name: 'Users',
   data () {
     return {
-      users: []
+      users: [],
+      dataloaded: false
     }
   },
   components: {
@@ -48,6 +49,7 @@ export default {
       clapi.post('data/relationQuery', '{"entityId":"/DiscussionGroup/1jipe5uebj67scpwpqnk7vgn5502","relationName":"GroupMembers","fields":["FirstName", "Lastname", "Username", "Lastlogin", "LicenseType.Name", "State.Name"],"where":"State IN (\'Active\',\'Draft\')","paging":{"from":0, "limit": 500}}'
       ).then(response => {
         this.users = response.data.entities
+        this.dataloaded = true
       }).catch(error => {
         console.log(error)
       })
@@ -118,13 +120,17 @@ export default {
       return x
     },
     groupLastLogin: function () {
-      var now = Date.now()
+      var now = new Date()
       var x = _.countBy(this.users, function (item) {
-        var daydiff = (now - Date.parse(item.Lastlogin)) / (1000 * 60 * 60 * 24)
-        return Math.floor(daydiff)
+        var lastlogin = new Date(item.Lastlogin + 'Z')
+        if (now.setHours(0, 0, 0, 0) === lastlogin.setHours(0, 0, 0, 0)) {
+          lastlogin = new Date(item.Lastlogin + 'Z')
+          return lastlogin.getHours()
+        } else {
+          return NaN
+        }
       })
       delete x.NaN
-      console.log(_.values(x))
       return {
         day: _.keys(x),
         count: _.values(x)
