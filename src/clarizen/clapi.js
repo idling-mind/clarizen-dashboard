@@ -6,6 +6,6 @@ export default axios.create({
   async: true,
   crossdomain: true,
   headers: {
-    'Authorization': 'Session ee9b086e-6aba-4938-9b8a-34a36434f08a_25446405'
+    'Authorization': 'Session 6c9f27e3-53ff-4cc4-b15d-35f02b4f07c3_25446405'
   }
 })
