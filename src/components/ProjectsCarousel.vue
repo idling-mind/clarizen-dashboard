@@ -91,7 +91,11 @@ export default {
     }
   },
   mounted () {
-    this.getStrategyProject()
+    var vm = this
+    vm.getStrategyProject()
+    setInterval(function () {
+      vm.getStrategyProject()
+    }, 300000)
   }
 }
 </script>
