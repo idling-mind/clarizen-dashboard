@@ -51,6 +51,7 @@
               </div>
             </div>
           </div>
+          <page-header title='Strategy Matrix - CIPs'></page-header>
           <div class="row row-cards">
             <div class="col-lg-12">
               <projects-carousel></projects-carousel>
