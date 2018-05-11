@@ -82,13 +82,10 @@ export default {
         clapi.post('data/relationQuery', '{"entityId":"/Topic/tpofjhhfustp9fpijy1r9zmd398","relationName":"Cases","fields":["Title"]}'
         ).then(response => {
           vm.domains = _.map(response.data.entities, 'Title')
-          console.log('Data Loaded ' + vm.domains)
           vm.projects.forEach(function (project) {
-            console.log(project)
             if (project.RelatedRequests) {
               var requests = _.map(project.RelatedRequests.entities, 'Title')
               project['Domain'] = _.intersectionWith(vm.domains, requests, _.isEqual)[0]
-              console.log(project.Name + ' - ' + project.Domain)
             } else {
               project['Domain'] = ''
             }

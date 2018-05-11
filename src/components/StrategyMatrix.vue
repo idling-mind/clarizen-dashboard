@@ -91,7 +91,6 @@ export default {
       clapi.get('data/query?q=SELECT%20@Name,%20PercentCompleted,%20TrackStatus.Name%20FROM%20Project%20WHERE%20Project%20=%20%22/Project/5r4db1jbd0biqmx59gobn5o6s681%22'
       ).then(response => {
         this.strategyMatrix = response.data.entities[0]
-        console.log(this.strategyMatrix)
       }).catch(error => {
         console.log(error)
       })
@@ -125,7 +124,6 @@ export default {
       vm.getStrategyProject()
       vm.getQ2Prio()
     }, 300000)
-    console.log('Executed query')
   }
 }
 </script>
