@@ -68,8 +68,13 @@ export default {
       axis: {
         x: {
           show: true,
+          fit: true,
           min: 0,
           max: 24,
+          padding: {
+            left: 1,
+            right: 1
+          },
           tick: {
             values: _.range(25)
           }
