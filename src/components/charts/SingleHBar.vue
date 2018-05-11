@@ -11,6 +11,7 @@
 
 <script>
 import c3 from 'c3'
+import * as d3 from 'd3'
 import tabler from '../../assets/js/Colors.js'
 
 export default {
@@ -71,6 +72,10 @@ export default {
       },
       size: {
         height: 76
+      },
+      onrendered: function () {
+        d3.selectAll('.c3-texts').attr('transform', 'translate(-22, 0)')
+        d3.selectAll('.c3-text').style('fill', 'white')
       }
     })
   },
