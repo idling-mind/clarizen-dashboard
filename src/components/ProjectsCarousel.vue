@@ -1,6 +1,6 @@
 <template>
   <div v-if="dataisloaded">
-    <carousel :scrollPerPage="false" :autoplay="true" :perPageCustom="[[768, 1], [1024, 2], [1400, 3]]" autoplayTimeout=8000 :loop="true">
+    <carousel :scrollPerPage="false" :autoplay="true" :perPageCustom="[[768, 1], [1024, 2], [1400, 3]]" :autoplayTimeout=8000 :loop="true">
       <slide v-for="project in projects" :key="project.id">
         <div class="col-md-12 col-sm-12">
           <div class="card">
@@ -36,6 +36,9 @@
                 </div>
               </div>
             </div>
+            <div class="card-footer">
+              <span class="badge" :style="'background-color:' + domaincolor(project.Domain)">{{ project.Domain }}</span>
+            </div>
           </div>
         </div>
       </slide>
@@ -46,6 +49,7 @@
 <script>
 import { Carousel, Slide } from 'vue-carousel'
 import RadialProgressBar from 'vue-radial-progress'
+import _ from 'lodash'
 import clapi from '../clarizen/clapi.js'
 import tabler from '../assets/js/Colors.js'
 
@@ -65,20 +69,41 @@ export default {
   data () {
     return {
       projects: [],
+      domains: [],
       dataisloaded: false
     }
   },
   methods: {
     getStrategyProject () {
       var vm = this
-      clapi.get('data/query?q=SELECT%20@Name,%20PercentCompleted,%20TrackStatus.Name,%20ProjectManager.Name,%20%20%28SELECT%20Name%20FROM%20Resources%29%20FROM%20Project%20WHERE%20ParentProject%20=%20%22/Project/5r4db1jbd0biqmx59gobn5o6s681%22'
+      clapi.get('data/query?q=SELECT%20@Name,%20PercentCompleted,%20TrackStatus.Name,%20ProjectManager.Name,%20%28SELECT%20Name%20FROM%20Resources%29,%20%28SELECT%20Title%20FROM%20RelatedRequests%29%20FROM%20Project%20WHERE%20ParentProject%20=%20%22/Project/5r4db1jbd0biqmx59gobn5o6s681%22'
       ).then(response => {
         vm.projects = response.data.entities
-        vm.dataisloaded = true
-        console.log(vm.dataisloaded)
+        clapi.post('data/relationQuery', '{"entityId":"/Topic/tpofjhhfustp9fpijy1r9zmd398","relationName":"Cases","fields":["Title"]}'
+        ).then(response => {
+          vm.domains = _.map(response.data.entities, 'Title')
+          console.log('Data Loaded ' + vm.domains)
+          vm.projects.forEach(function (project) {
+            console.log(project)
+            if (project.RelatedRequests) {
+              var requests = _.map(project.RelatedRequests.entities, 'Title')
+              project['Domain'] = _.intersectionWith(vm.domains, requests, _.isEqual)[0]
+              console.log(project.Name + ' - ' + project.Domain)
+            } else {
+              project['Domain'] = ''
+            }
+          })
+          vm.dataisloaded = true
+        }).catch(error => {
+          console.log(error)
+        })
       }).catch(error => {
         console.log(error)
       })
+    },
+    domaincolor (domain) {
+      var i = _.indexOf(this.domains, domain)
+      return tabler.primary[i]
     },
     statuscolor (status) {
       if (status === 'On Track') {
