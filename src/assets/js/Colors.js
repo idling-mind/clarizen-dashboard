@@ -98,5 +98,5 @@ export default {
     'gray-dark-lighter': '#c2c4c6',
     'gray-dark-lightest': '#ebebec'
   },
-  primary: ['#467fcf', '#5eba00', '#f66d9b', '#2bcbba', '#45aaf2', '#6574cd', '#bfefea']
+  primary: ['#467fcf', '#5eba00', '#17a2b8', '#fd9644', '#f66d9b', '#2bcbba', '#45aaf2', '#6574cd', '#bfefea']
 }
