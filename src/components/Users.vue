@@ -3,7 +3,7 @@
     <div class="page-main">
       <div class="my-3 my-md-5">
         <div class="container-fluid">
-          <page-header title='Clarizen Users'></page-header>
+          <page-header title='Clarizen Users at GAI'></page-header>
           <div class="row row-cards">
             <card-small-progress title="Number of Users" :hilight="noOfUsers" :progress=100 color="bg-blue"></card-small-progress>
             <card-small-progress title="Never logged in" :hilight="noOfNonLoggers.count" :progress="noOfNonLoggers.percent" color="bg-red"></card-small-progress>
