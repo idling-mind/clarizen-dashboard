@@ -12,7 +12,7 @@
             <single-h-bar title="License Type" :datajson="groupLicenseType"></single-h-bar>
           </div>
           <div v-if="dataloaded" class="row row-cards">
-            <line-chart-card :datajson="groupLastLogin" title="Users logged in today" smallnumber="User Login Times" :bignumber="Math.round(noOfTodayLoggers.percent) + '%'"></line-chart-card>
+            <line-chart-card :datajson="groupLastLogin" title="Users logged in today" smallnumber="User Login Time" :bignumber="Math.round(noOfTodayLoggers.percent) + '%'"></line-chart-card>
           </div>
         </div>
       </div>
