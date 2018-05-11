@@ -1,6 +1,6 @@
 <template>
   <div v-if="dataisloaded">
-    <carousel :scrollPerPage="false" :autoplay="true" :perPageCustom="[[480, 1], [768, 2], [1024, 3]]" autoplayTimeout=8000 :loop="true">
+    <carousel :scrollPerPage="false" :autoplay="true" :perPageCustom="[[768, 1], [1024, 2], [1400, 3]]" autoplayTimeout=8000 :loop="true">
       <slide v-for="project in projects" :key="project.id">
         <div class="col-md-12 col-sm-12">
           <div class="card">

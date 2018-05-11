@@ -5,13 +5,13 @@
         <div class="container-fluid">
           <page-header title='GAI Strategy Matrix'></page-header>
           <div class="row row-cards">
-            <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="col-xl-3 col-lg-6 col-sm-12">
               <circle-progress title="Overall Progress" :number=strategyMatrix.PercentCompleted :status="strategyMatrix.TrackStatus.Name"></circle-progress>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="col-xl-3 col-lg-6 col-sm-12">
               <circle-progress title="Priority CIPs for the Quarter" :number=this.progressQPrio() :status="this.statuscolor('On Track')"></circle-progress>
             </div>
-            <div class="col-lg-6">
+            <div class="col-xl-6 col-lg-12">
               <div class="card">
                 <div class="card-header">
                   <h3 class="card-title">Priority CIP List for the Quarter</h3>
