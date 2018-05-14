@@ -14,6 +14,9 @@
           <div v-if="dataloaded" class="row row-cards">
             <line-chart-card :datajson="groupLastLogin" title="Users logged in today" smallnumber="User Login Time" :bignumber="Math.round(noOfTodayLoggers.percent) + '%'"></line-chart-card>
           </div>
+          <div v-if="workitemsloaded" class="row row-cards">
+            <user-projects :datajson="userwork" title="User workitems count" smallnumber="Work Items per User"></user-projects>
+          </div>
         </div>
       </div>
     </div>
@@ -28,13 +31,16 @@ import CardBigProgress from './cards/CardBigProgress.vue'
 import CardSmallProgress from './cards/CardSmallProgress.vue'
 import SingleHBar from './charts/SingleHBar.vue'
 import LineChartCard from './charts/LineChartCard.vue'
+import UserProjects from './charts/UserProjects.vue'
 
 export default {
   name: 'Users',
   data () {
     return {
       users: [],
-      dataloaded: false
+      userwork: [],
+      dataloaded: false,
+      workitemsloaded: false
     }
   },
   components: {
@@ -42,7 +48,8 @@ export default {
     CardBigProgress,
     CardSmallProgress,
     SingleHBar,
-    LineChartCard
+    LineChartCard,
+    UserProjects
   },
   methods: {
     getUsers () {
@@ -50,8 +57,34 @@ export default {
       ).then(response => {
         this.users = response.data.entities
         this.dataloaded = true
+        if (this.userwork.length === 0) {
+          // Get the userwork array for the first time
+          this.getUserWork()
+        }
       }).catch(error => {
         console.log(error)
+      })
+    },
+    getUserWork () {
+      var vm = this
+      var axpromises = []
+      vm.users.forEach(function (user) {
+        axpromises.push(
+          clapi.post('data/relationQuery', '{"entityId":"' + user.id + '","relationName":"MemberOfWorkItems","fields":["Name", "EntityType"]}'
+          ).then(response => {
+            user['Workitems'] = response.data.entities
+          })
+        )
+      })
+      Promise.all(axpromises).then(response => {
+        vm.users.forEach(function (user) {
+          vm.userwork.push({
+            'Name': user.FirstName,
+            'WorkItemCount': _.countBy(user.Workitems, function (item) { return item.EntityType })
+          })
+        })
+        vm.workitemsloaded = true
+        console.dir(this.userwork)
       })
     }
   },
@@ -61,6 +94,9 @@ export default {
     setInterval(function () {
       vm.getUsers()
     }, 300000)
+    setInterval(function () {
+      vm.getUserWork()
+    }, 3600000)
   },
   computed: {
     noOfUsers: function () {
