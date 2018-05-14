@@ -15,7 +15,7 @@
             <line-chart-card :datajson="groupLastLogin" title="Users logged in today" smallnumber="User Login Time" :bignumber="Math.round(noOfTodayLoggers.percent) + '%'"></line-chart-card>
           </div>
           <div v-if="workitemsloaded" class="row row-cards">
-            <user-projects :datajson="userwork" title="User workitems count" smallnumber="Work Items per User"></user-projects>
+            <user-projects :datajson="userwork" title="User Tasks count" smallnumber="Active Work Items Per User" :bignumber="totalActiveTasks + ' Active Tasks'"></user-projects>
           </div>
         </div>
       </div>
@@ -70,7 +70,7 @@ export default {
       var axpromises = []
       vm.users.forEach(function (user) {
         axpromises.push(
-          clapi.post('data/relationQuery', '{"entityId":"' + user.id + '","relationName":"MemberOfWorkItems","fields":["Name", "EntityType"]}'
+          clapi.post('data/relationQuery', '{"entityId":"' + user.id + '","relationName":"MemberOfWorkItems","fields":["Name","EntityType","State.Name"]}'
           ).then(response => {
             user['Workitems'] = response.data.entities
           })
@@ -80,11 +80,16 @@ export default {
         vm.users.forEach(function (user) {
           vm.userwork.push({
             'Name': user.FirstName,
-            'WorkItemCount': _.countBy(user.Workitems, function (item) { return item.EntityType })
+            'WorkItemCount': _.countBy(user.Workitems, function (item) {
+              if (item.State) {
+                if (item.State.Name === 'Active') {
+                  return item.EntityType
+                }
+              }
+            })
           })
         })
         vm.workitemsloaded = true
-        console.dir(this.userwork)
       })
     }
   },
@@ -171,6 +176,12 @@ export default {
         day: _.keys(x),
         count: _.values(x)
       }
+    },
+    totalActiveTasks: function () {
+      var vm = this
+      return _.sumBy(vm.userwork, function (item) {
+        return item.WorkItemCount.Task
+      })
     }
   }
 }

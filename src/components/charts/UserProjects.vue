@@ -45,8 +45,9 @@ export default {
         json: this.datajson,
         keys: {
           x: 'Name',
-          value: ['WorkItemCount.Project']
+          value: ['WorkItemCount.Task']
         },
+        labels: true,
         type: 'bar'
       },
       legend: {
