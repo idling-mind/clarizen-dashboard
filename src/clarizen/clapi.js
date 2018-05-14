@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export default axios.create({
   baseURL: 'https://apie1.clarizen.com/v2.0/services/',
-  timeout: 5000,
+  timeout: 15000,
   async: true,
   crossdomain: true,
   headers: {
