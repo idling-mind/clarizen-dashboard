@@ -55,7 +55,7 @@ export default {
       },
       bar: {
         width: {
-          ratio: 0.5
+          ratio: 0.8
         }
       },
       color: {
