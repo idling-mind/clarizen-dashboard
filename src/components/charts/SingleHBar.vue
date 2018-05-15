@@ -1,5 +1,5 @@
 <template>
-  <div class="col-lg-4 col-md-8 col-sm-12">
+  <div id="singlehbar" class="col-lg-4 col-md-8 col-sm-12">
     <div class="card">
       <div class="card-body text-center">
         <div class="h5">{{ title }}</div>
@@ -74,8 +74,8 @@ export default {
         height: 76
       },
       onrendered: function () {
-        d3.selectAll('.c3-texts').attr('transform', 'translate(-22, 0)')
-        d3.selectAll('.c3-text').style('fill', 'white')
+        d3.select('#singlehbar').selectAll('.c3-texts').attr('transform', 'translate(-22, 0)')
+        d3.select('#singlehbar').selectAll('.c3-text').style('fill', 'white')
       }
     })
   },
