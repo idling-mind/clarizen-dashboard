@@ -18,7 +18,7 @@
             <user-projects :datajson="userwork" title="User Tasks count" smallnumber="Active Work Items Per User" :bignumber="totalActiveTasks + ' Active Tasks'"></user-projects>
           </div>
           <div v-if="workitemsloaded" class="row row-cards">
-            <due-dates :datajson="usertasks" title="User Tasks count" smallnumber="Active Work Items Per User" :bignumber="totalActiveTasks + ' Active Tasks'"></due-dates>
+            <due-dates :datajson="usertasks" title="Tasks past due date"></due-dates>
           </div>
         </div>
       </div>
@@ -92,15 +92,27 @@ export default {
         if (user.AssignedWorkItems) {
           user.AssignedWorkItems.entities.forEach(function (item) {
             if (item.EntityType === 'Task') {
-              var duedate = new Date(item.DueDate)
-              tasks.push(duedate.toLocaleDateString('en-US'))
+              tasks.push(item.DueDate)
             }
           })
         }
       })
       var o = _.countBy(tasks)
-      vm.usertasks['dates'] = _.keys(o)
-      vm.usertasks['values'] = _.values(o)
+      vm.usertasks['pastdates'] = []
+      vm.usertasks['pastvalues'] = []
+      vm.usertasks['dates'] = []
+      vm.usertasks['values'] = []
+      _.forOwn(o, function (value, date) {
+        var odate = new Date(date)
+        var today = new Date()
+        if (odate < today) {
+          vm.usertasks['pastdates'].push(odate)
+          vm.usertasks['pastvalues'].push(value)
+        } else {
+          vm.usertasks['dates'].push(odate)
+          vm.usertasks['values'].push(value)
+        }
+      })
       console.dir(vm.usertasks)
     }
   },
