@@ -17,6 +17,9 @@
           <div v-if="workitemsloaded" class="row row-cards">
             <user-projects :datajson="userwork" title="User Tasks count" smallnumber="Active Work Items Per User" :bignumber="totalActiveTasks + ' Active Tasks'"></user-projects>
           </div>
+          <div v-if="workitemsloaded" class="row row-cards">
+            <due-dates :datajson="usertasks" title="User Tasks count" smallnumber="Active Work Items Per User" :bignumber="totalActiveTasks + ' Active Tasks'"></due-dates>
+          </div>
         </div>
       </div>
     </div>
@@ -31,6 +34,7 @@ import CardBigProgress from './cards/CardBigProgress.vue'
 import CardSmallProgress from './cards/CardSmallProgress.vue'
 import SingleHBar from './charts/SingleHBar.vue'
 import LineChartCard from './charts/LineChartCard.vue'
+import DueDates from './charts/DueDates.vue'
 import UserProjects from './charts/UserProjects.vue'
 
 export default {
@@ -39,6 +43,7 @@ export default {
     return {
       users: [],
       userwork: [],
+      usertasks: {},
       dataloaded: false,
       workitemsloaded: false
     }
@@ -49,6 +54,7 @@ export default {
     CardSmallProgress,
     SingleHBar,
     LineChartCard,
+    DueDates,
     UserProjects
   },
   methods: {
@@ -59,6 +65,7 @@ export default {
         this.users = response.data.entities
         this.dataloaded = true
         this.getUserWork()
+        this.getUserTasks()
       }).catch(error => {
         console.log(error)
       })
@@ -77,6 +84,24 @@ export default {
         vm.userwork.push(workitem)
       })
       vm.workitemsloaded = true
+    },
+    getUserTasks () {
+      var vm = this
+      var tasks = []
+      vm.users.forEach(function (user) {
+        if (user.AssignedWorkItems) {
+          user.AssignedWorkItems.entities.forEach(function (item) {
+            if (item.EntityType === 'Task') {
+              var duedate = new Date(item.DueDate)
+              tasks.push(duedate.toLocaleDateString('en-US'))
+            }
+          })
+        }
+      })
+      var o = _.countBy(tasks)
+      vm.usertasks['dates'] = _.keys(o)
+      vm.usertasks['values'] = _.values(o)
+      console.dir(vm.usertasks)
     }
   },
   mounted () {

@@ -18,11 +18,15 @@ import c3 from 'c3'
 import tabler from '../../assets/js/Colors.js'
 
 export default {
-  name: 'UserProjects',
+  name: 'LineChartCard',
   props: {
     title: {
       type: String,
       required: true
+    },
+    xlabel: {
+      type: String,
+      required: false
     },
     smallnumber: {
       type: String,
@@ -33,7 +37,7 @@ export default {
       required: false
     },
     datajson: {
-      type: Array,
+      type: Object,
       required: true
     }
   },
@@ -43,12 +47,9 @@ export default {
       bindto: vm.$el.querySelector('.c3'),
       data: {
         json: this.datajson,
-        keys: {
-          x: 'Name',
-          value: ['WorkItemCount.Task']
-        },
-        labels: true,
-        type: 'bar'
+        x: 'dates',
+        xFormat: '%m/%d/%Y',
+        type: 'area'
       },
       legend: {
         show: false
@@ -61,31 +62,34 @@ export default {
       },
       axis: {
         x: {
-          type: 'category',
-          show: true,
-          fit: true,
-          padding: {
-            left: 1,
-            right: 1
-          },
+          type: 'timeseries',
           tick: {
+            format: '%Y-%m-%d',
             rotate: 75,
             multiline: false
           },
-          height: 250
+          show: true,
+          padding: {
+            left: 2,
+            right: 2
+          },
+          height: 200
         },
         y: {
           show: false
         }
       },
-      grid: {
-        y: {
-          show: true
-        }
-      },
       size: {
         height: 400
       }
+    })
+    var now = new Date()
+    this.chart.load({
+      json: {
+        'dates': [now],
+        'today': [80]
+      },
+      type: 'bar'
     })
   },
   watch: {
