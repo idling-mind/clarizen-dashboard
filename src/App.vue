@@ -12,7 +12,7 @@ export default {
 
 <style>
 body {
-  overflow: hidden;
+  overflow: auto;
   margin: 20px;
 }
 </style>

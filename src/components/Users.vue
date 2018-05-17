@@ -53,44 +53,30 @@ export default {
   },
   methods: {
     getUsers () {
-      clapi.post('data/relationQuery', '{"entityId":"/DiscussionGroup/1jipe5uebj67scpwpqnk7vgn5502","relationName":"GroupMembers","fields":["FirstName", "Lastname", "Username", "Lastlogin", "LicenseType.Name", "State.Name"],"where":"State IN (\'Active\',\'Draft\')","paging":{"from":0, "limit": 500}}'
+      console.log('Data going to get loaded')
+      clapi.post('data/relationQuery', '{"entityId":"/DiscussionGroup/1jipe5uebj67scpwpqnk7vgn5502","relationName":"GroupMembers","fields":["FirstName", "Lastname", "Username", "Lastlogin", "LicenseType.Name", "State.Name"],"where":"State IN (\'Active\',\'Draft\')","relations":[{"name":"AssignedWorkItems","fields":["Name","EntityType","State.Name","DueDate"],"where":{"leftExpression": {"fieldName": "State"},"operator": "Equal","rightExpression": {"value": "Active"}}}],"paging":{"from":0,"limit": 500}}'
       ).then(response => {
         this.users = response.data.entities
         this.dataloaded = true
-        if (this.userwork.length === 0) {
-          // Get the userwork array for the first time
-          this.getUserWork()
-        }
+        this.getUserWork()
       }).catch(error => {
         console.log(error)
       })
     },
     getUserWork () {
       var vm = this
-      var axpromises = []
+      vm.userwork = []
       vm.users.forEach(function (user) {
-        axpromises.push(
-          clapi.post('data/relationQuery', '{"entityId":"' + user.id + '","relationName":"MemberOfWorkItems","fields":["Name","EntityType","State.Name"]}'
-          ).then(response => {
-            user['Workitems'] = response.data.entities
+        var workitem = {}
+        workitem['Name'] = user.FirstName + ' ' + user.Lastname
+        if (user.AssignedWorkItems) {
+          workitem['WorkItemCount'] = _.countBy(user.AssignedWorkItems.entities, function (item) {
+            return item.EntityType
           })
-        )
+        }
+        vm.userwork.push(workitem)
       })
-      Promise.all(axpromises).then(response => {
-        vm.users.forEach(function (user) {
-          vm.userwork.push({
-            'Name': user.FirstName,
-            'WorkItemCount': _.countBy(user.Workitems, function (item) {
-              if (item.State) {
-                if (item.State.Name === 'Active') {
-                  return item.EntityType
-                }
-              }
-            })
-          })
-        })
-        vm.workitemsloaded = true
-      })
+      vm.workitemsloaded = true
     }
   },
   mounted () {
@@ -99,9 +85,6 @@ export default {
     setInterval(function () {
       vm.getUsers()
     }, 300000)
-    setInterval(function () {
-      vm.getUserWork()
-    }, 3600000)
   },
   computed: {
     noOfUsers: function () {
@@ -180,7 +163,9 @@ export default {
     totalActiveTasks: function () {
       var vm = this
       return _.sumBy(vm.userwork, function (item) {
-        return item.WorkItemCount.Task
+        if (item.WorkItemCount) {
+          return item.WorkItemCount.Task
+        }
       })
     }
   }
