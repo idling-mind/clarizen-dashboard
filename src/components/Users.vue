@@ -15,10 +15,16 @@
             <line-chart-card :datajson="groupLastLogin" title="Users logged in today" smallnumber="User Login Time" :bignumber="Math.round(noOfTodayLoggers.percent) + '%'"></line-chart-card>
           </div>
           <div v-if="workitemsloaded" class="row row-cards">
-            <user-projects :datajson="userwork" title="User Tasks count" smallnumber="Active Work Items Per User" :bignumber="totalActiveTasks + ' Active Tasks'"></user-projects>
-          </div>
-          <div v-if="workitemsloaded" class="row row-cards">
-            <due-dates :datajson="usertasks" title="Tasks past due date"></due-dates>
+            <div class="col-12">
+              <carousel :scrollPerPage="true" :autoplay="true" :perPage="1" :autoplayTimeout=8000 :loop="true">
+                <slide>
+                  <user-projects v-if="workitemsloaded" :datajson="userwork" title="User Tasks count" smallnumber="Active Work Items Per User" :bignumber="totalActiveTasks + ' Active Tasks'"></user-projects>
+                </slide>
+                <slide>
+                  <due-dates v-if="workitemsloaded" :datajson="usertasks" title="Tasks past due date"></due-dates>
+                </slide>
+              </carousel>
+            </div>
           </div>
         </div>
       </div>
@@ -28,6 +34,7 @@
 
 <script>
 import _ from 'lodash'
+import { Carousel, Slide } from 'vue-carousel'
 import clapi from '../clarizen/clapi.js'
 import PageHeader from './PageHeader.vue'
 import CardBigProgress from './cards/CardBigProgress.vue'
@@ -55,6 +62,8 @@ export default {
     SingleHBar,
     LineChartCard,
     DueDates,
+    Carousel,
+    Slide,
     UserProjects
   },
   methods: {

@@ -91,7 +91,13 @@ export default {
   watch: {
     datajson: function (val) {
       this.chart.load({
-        json: val
+        json: val,
+        keys: {
+          x: 'Name',
+          value: ['WorkItemCount.Task']
+        },
+        labels: true,
+        type: 'bar'
       })
     }
   }
