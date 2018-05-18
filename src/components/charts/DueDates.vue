@@ -5,9 +5,7 @@
         <div class="card-value float-right text-red">{{ bignumber }} <h6 class="text-muted">Tasks past due</h6></div>
         <h3 class="mb-1">{{ title }}</h3>
       </div>
-      <div class="card-chart-bg" style="min-height: 300px">
-        <div class="c3"></div>
-      </div>
+      <div class="c3"></div>
     </div>
   </div>
 </template>
@@ -62,30 +60,41 @@ export default {
       color: {
         pattern: tabler.primary
       },
+      bar: {
+        width: 10
+      },
+      grid: {
+        x: {
+          lines: [
+            {value: new Date(), text: 'Today'}
+          ]
+        }
+      },
       area: {
         zerobased: true
+      },
+      padding: {
+        left: 10,
+        right: 10
       },
       axis: {
         x: {
           type: 'timeseries',
           tick: {
             format: '%Y-%m-%d',
+            fit: false,
             rotate: 75,
             multiline: false
           },
           show: true,
-          padding: {
-            left: 2,
-            right: 2
-          },
-          height: 200
+          height: 150
         },
         y: {
           show: false
         }
       },
       size: {
-        height: 400
+        height: 350
       }
     })
   },

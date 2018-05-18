@@ -18,7 +18,7 @@
             <div class="col-12">
               <carousel :scrollPerPage="true" :autoplay="true" :perPage="1" :autoplayTimeout=8000 :loop="true">
                 <slide>
-                  <user-projects v-if="workitemsloaded" :datajson="userwork" title="User Tasks count" smallnumber="Active Work Items Per User" :bignumber="totalActiveTasks + ' Active Tasks'"></user-projects>
+                  <user-projects v-if="workitemsloaded" :datajson="userwork" title="Showing upto 30 tasks per user" smallnumber="Active Tasks for each User" :bignumber="totalActiveTasks + ' Active Tasks'"></user-projects>
                 </slide>
                 <slide>
                   <due-dates v-if="workitemsloaded" :datajson="usertasks" title="Tasks past due date"></due-dates>
@@ -57,19 +57,19 @@ export default {
   },
   components: {
     PageHeader,
+    Carousel,
+    Slide,
     CardBigProgress,
     CardSmallProgress,
     SingleHBar,
     LineChartCard,
     DueDates,
-    Carousel,
-    Slide,
     UserProjects
   },
   methods: {
     getUsers () {
       console.log('Data going to get loaded')
-      clapi.post('data/relationQuery', '{"entityId":"/DiscussionGroup/1jipe5uebj67scpwpqnk7vgn5502","relationName":"GroupMembers","fields":["FirstName", "Lastname", "Username", "Lastlogin", "LicenseType.Name", "State.Name"],"where":"State IN (\'Active\',\'Draft\')","relations":[{"name":"AssignedWorkItems","fields":["Name","EntityType","State.Name","DueDate"],"where":{"leftExpression": {"fieldName": "State"},"operator": "Equal","rightExpression": {"value": "Active"}}}],"paging":{"from":0,"limit": 500}}'
+      clapi.post('data/relationQuery', '{"entityId":"/DiscussionGroup/1jipe5uebj67scpwpqnk7vgn5502","relationName":"GroupMembers","fields":["FirstName", "Lastname", "Username", "Lastlogin", "LicenseType.Name", "State.Name"],"orders":[{"fieldName":"FirstName","order":"Ascending"}],"where":"State IN (\'Active\')","relations":[{"name":"AssignedWorkItems","fields":["Name","EntityType","TrackStatus.Name","DueDate"],"where":{ "and": [{"leftExpression":{"fieldName":"State"},"operator":"Equal","rightExpression":{"value":"Active"}},{"leftExpression":{"fieldName":"EntityType"},"operator":"Equal","rightExpression":{"value":"Task"}}]}}],"paging":{"from":0, "limit": 500}}'
       ).then(response => {
         this.users = response.data.entities
         this.dataloaded = true
@@ -92,7 +92,6 @@ export default {
         }
         vm.userwork.push(workitem)
       })
-      vm.workitemsloaded = true
     },
     getUserTasks () {
       var vm = this
@@ -123,6 +122,7 @@ export default {
         }
       })
       console.dir(vm.usertasks)
+      vm.workitemsloaded = true
     }
   },
   mounted () {
@@ -217,3 +217,11 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.VueCarousel-slide {
+  visibility: visible;
+  flex-basis: 100%;
+  width: 100%;
+}
+</style>

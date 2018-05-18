@@ -6,9 +6,7 @@
         <h3 class="mb-1">{{ smallnumber }}</h3>
         <div class="text-muted">{{ title }}</div>
       </div>
-      <div class="card-chart-bg" style="min-height: 300px">
-        <div class="c3"></div>
-      </div>
+      <div class="c3"></div>
     </div>
   </div>
 </template>
@@ -72,7 +70,7 @@ export default {
             rotate: 75,
             multiline: false
           },
-          height: 250
+          height: 150
         },
         y: {
           show: false
@@ -84,7 +82,7 @@ export default {
         }
       },
       size: {
-        height: 400
+        height: 350
       }
     })
   },
