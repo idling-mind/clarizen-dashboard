@@ -15,7 +15,16 @@
             <line-chart-card :datajson="groupLastLogin" title="Users logged in today" smallnumber="User Login Time" :bignumber="Math.round(noOfTodayLoggers.percent) + '%'"></line-chart-card>
           </div>
           <div v-if="workitemsloaded" class="row row-cards">
-            <user-projects :datajson="userwork" title="User Tasks count" smallnumber="Active Work Items Per User" :bignumber="totalActiveTasks + ' Active Tasks'"></user-projects>
+            <div class="col-12">
+              <carousel :scrollPerPage="true" :autoplay="true" :perPage="1" :autoplayTimeout=8000 :loop="true">
+                <slide>
+                  <user-projects v-if="workitemsloaded" :datajson="userwork" title="Showing upto 30 tasks per user" smallnumber="Active Tasks for each User" :bignumber="totalActiveTasks + ' Active Tasks'"></user-projects>
+                </slide>
+                <slide>
+                  <due-dates v-if="workitemsloaded" :datajson="usertasks" title="Tasks past due date"></due-dates>
+                </slide>
+              </carousel>
+            </div>
           </div>
         </div>
       </div>
@@ -25,12 +34,14 @@
 
 <script>
 import _ from 'lodash'
+import { Carousel, Slide } from 'vue-carousel'
 import clapi from '../clarizen/clapi.js'
 import PageHeader from './PageHeader.vue'
 import CardBigProgress from './cards/CardBigProgress.vue'
 import CardSmallProgress from './cards/CardSmallProgress.vue'
 import SingleHBar from './charts/SingleHBar.vue'
 import LineChartCard from './charts/LineChartCard.vue'
+import DueDates from './charts/DueDates.vue'
 import UserProjects from './charts/UserProjects.vue'
 
 export default {
@@ -39,58 +50,79 @@ export default {
     return {
       users: [],
       userwork: [],
+      usertasks: {},
       dataloaded: false,
       workitemsloaded: false
     }
   },
   components: {
     PageHeader,
+    Carousel,
+    Slide,
     CardBigProgress,
     CardSmallProgress,
     SingleHBar,
     LineChartCard,
+    DueDates,
     UserProjects
   },
   methods: {
     getUsers () {
-      clapi.post('data/relationQuery', '{"entityId":"/DiscussionGroup/1jipe5uebj67scpwpqnk7vgn5502","relationName":"GroupMembers","fields":["FirstName", "Lastname", "Username", "Lastlogin", "LicenseType.Name", "State.Name"],"where":"State IN (\'Active\',\'Draft\')","paging":{"from":0, "limit": 500}}'
+      console.log('Data going to get loaded')
+      clapi.post('data/relationQuery', '{"entityId":"/DiscussionGroup/1jipe5uebj67scpwpqnk7vgn5502","relationName":"GroupMembers","fields":["FirstName", "Lastname", "Username", "Lastlogin", "LicenseType.Name", "State.Name"],"orders":[{"fieldName":"FirstName","order":"Ascending"}],"where":"State IN (\'Active\')","relations":[{"name":"AssignedWorkItems","fields":["Name","EntityType","TrackStatus.Name","DueDate"],"where":{ "and": [{"leftExpression":{"fieldName":"State"},"operator":"Equal","rightExpression":{"value":"Active"}},{"leftExpression":{"fieldName":"EntityType"},"operator":"Equal","rightExpression":{"value":"Task"}}]}}],"paging":{"from":0, "limit": 500}}'
       ).then(response => {
         this.users = response.data.entities
         this.dataloaded = true
-        if (this.userwork.length === 0) {
-          // Get the userwork array for the first time
-          this.getUserWork()
-        }
+        this.getUserWork()
+        this.getUserTasks()
       }).catch(error => {
         console.log(error)
       })
     },
     getUserWork () {
       var vm = this
-      var axpromises = []
+      vm.userwork = []
       vm.users.forEach(function (user) {
-        axpromises.push(
-          clapi.post('data/relationQuery', '{"entityId":"' + user.id + '","relationName":"MemberOfWorkItems","fields":["Name","EntityType","State.Name"]}'
-          ).then(response => {
-            user['Workitems'] = response.data.entities
+        var workitem = {}
+        workitem['Name'] = user.FirstName + ' ' + user.Lastname
+        if (user.AssignedWorkItems) {
+          workitem['WorkItemCount'] = _.countBy(user.AssignedWorkItems.entities, function (item) {
+            return item.EntityType
           })
-        )
+        }
+        vm.userwork.push(workitem)
       })
-      Promise.all(axpromises).then(response => {
-        vm.users.forEach(function (user) {
-          vm.userwork.push({
-            'Name': user.FirstName,
-            'WorkItemCount': _.countBy(user.Workitems, function (item) {
-              if (item.State) {
-                if (item.State.Name === 'Active') {
-                  return item.EntityType
-                }
-              }
-            })
+    },
+    getUserTasks () {
+      var vm = this
+      var tasks = []
+      vm.users.forEach(function (user) {
+        if (user.AssignedWorkItems) {
+          user.AssignedWorkItems.entities.forEach(function (item) {
+            if (item.EntityType === 'Task') {
+              tasks.push(item.DueDate)
+            }
           })
-        })
-        vm.workitemsloaded = true
+        }
       })
+      var o = _.countBy(tasks)
+      vm.usertasks['pastdates'] = []
+      vm.usertasks['pastvalues'] = []
+      vm.usertasks['dates'] = []
+      vm.usertasks['values'] = []
+      _.forOwn(o, function (value, date) {
+        var odate = new Date(date)
+        var today = new Date()
+        if (odate < today) {
+          vm.usertasks['pastdates'].push(odate)
+          vm.usertasks['pastvalues'].push(value)
+        } else {
+          vm.usertasks['dates'].push(odate)
+          vm.usertasks['values'].push(value)
+        }
+      })
+      console.dir(vm.usertasks)
+      vm.workitemsloaded = true
     }
   },
   mounted () {
@@ -99,9 +131,6 @@ export default {
     setInterval(function () {
       vm.getUsers()
     }, 300000)
-    setInterval(function () {
-      vm.getUserWork()
-    }, 3600000)
   },
   computed: {
     noOfUsers: function () {
@@ -180,9 +209,19 @@ export default {
     totalActiveTasks: function () {
       var vm = this
       return _.sumBy(vm.userwork, function (item) {
-        return item.WorkItemCount.Task
+        if (item.WorkItemCount) {
+          return item.WorkItemCount.Task
+        }
       })
     }
   }
 }
 </script>
+
+<style scoped>
+.VueCarousel-slide {
+  visibility: visible;
+  flex-basis: 100%;
+  width: 100%;
+}
+</style>
