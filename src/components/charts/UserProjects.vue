@@ -43,16 +43,38 @@ export default {
         json: this.datajson,
         keys: {
           x: 'Name',
-          value: ['WorkItemCount.Task']
+          value: ['On Track', 'At Risk', 'Off Track', 'None']
         },
-        labels: true,
+        groups: [
+          ['On Track', 'At Risk', 'Off Track', 'None']
+        ],
+        labels: false,
         type: 'bar'
+      },
+      grid: {
+        lines: {
+          front: false
+        },
+        y: {
+          lines: [
+            {value: 5},
+            {value: 10},
+            {value: 15},
+            {value: 20},
+            {value: 25},
+            {value: 30}
+          ]
+        }
+      },
+      padding: {
+        left: 30,
+        right: 30
       },
       legend: {
         show: false
       },
       color: {
-        pattern: tabler.primary
+        pattern: [tabler.colors.green, tabler.colors.orange, tabler.colors.red, tabler.colors.gray]
       },
       area: {
         zerobased: true
@@ -73,7 +95,7 @@ export default {
           height: 150
         },
         y: {
-          show: false
+          show: true
         }
       },
       size: {

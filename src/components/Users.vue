@@ -51,6 +51,7 @@ export default {
       users: [],
       userwork: [],
       usertasks: {},
+      totalActiveTasks: 0,
       dataloaded: false,
       workitemsloaded: false
     }
@@ -82,14 +83,20 @@ export default {
     getUserWork () {
       var vm = this
       vm.userwork = []
+      vm.totalActiveTasks = 0
       vm.users.forEach(function (user) {
         var workitem = {}
-        workitem['Name'] = user.FirstName + ' ' + user.Lastname
         if (user.AssignedWorkItems) {
-          workitem['WorkItemCount'] = _.countBy(user.AssignedWorkItems.entities, function (item) {
-            return item.EntityType
+          vm.totalActiveTasks += user.AssignedWorkItems.entities.length
+          workitem = _.countBy(user.AssignedWorkItems.entities, function (item) {
+            if (item.TrackStatus) {
+              return item.TrackStatus.Name
+            } else {
+              return 'None'
+            }
           })
         }
+        workitem['Name'] = user.FirstName + ' ' + user.Lastname
         vm.userwork.push(workitem)
       })
     },
@@ -121,7 +128,6 @@ export default {
           vm.usertasks['values'].push(value)
         }
       })
-      console.dir(vm.usertasks)
       vm.workitemsloaded = true
     }
   },
@@ -205,14 +211,6 @@ export default {
         day: _.keys(x),
         count: _.values(x)
       }
-    },
-    totalActiveTasks: function () {
-      var vm = this
-      return _.sumBy(vm.userwork, function (item) {
-        if (item.WorkItemCount) {
-          return item.WorkItemCount.Task
-        }
-      })
     }
   }
 }

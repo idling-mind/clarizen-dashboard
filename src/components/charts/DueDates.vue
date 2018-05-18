@@ -74,8 +74,8 @@ export default {
         zerobased: true
       },
       padding: {
-        left: 10,
-        right: 10
+        left: 30,
+        right: 30
       },
       axis: {
         x: {
@@ -90,7 +90,7 @@ export default {
           height: 150
         },
         y: {
-          show: false
+          show: true
         }
       },
       size: {
