@@ -96,7 +96,7 @@ export default {
       })
     },
     getQ2Prio () {
-      clapi.get('data/query?q=SELECT%20@Name,%20TrackStatus.Name,%20ProjectManager.Name,%20PercentCompleted%20FROM%20Project%20WHERE%20Project%20in%20%28%22/Project/4m74mqegpf9y7uy8a6hhum5286425%22,%20%22/Project/6nhvmnlsvxwm675zm6bcmdelc4900%22,%20%22/Project/4ox5fhwlzdj41gaqzvivg4fqr4518%22,%20%22/Project/55vcj7fq8gy821rwkwrdsfuef3610%22%29'
+      clapi.get('data/query?q=SELECT%20@Name,%20TrackStatus.Name,%20ProjectManager.Name,%20PercentCompleted%20FROM%20Project%20WHERE%20Project%20in%20%28%22/Project/4m74mqegpf9y7uy8a6hhum5286425%22,%20%22/Project/6nhvmnlsvxwm675zm6bcmdelc4900%22,%20%22/Project/4ox5fhwlzdj41gaqzvivg4fqr4518%22,%20%22/Project/2c2vvz76w1h9dus7trgf0cj2p27253%22%29'
       ).then(response => {
         this.priocips = response.data.entities
       }).catch(error => {
